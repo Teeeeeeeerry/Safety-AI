@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Safety AI</title>
+  <script type="module" crossorigin src="/assets/popup.html-UZOvM6kG.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="stylesheet" crossorigin href="/assets/popup-CeHDVzjz.css">
+</head>
+<body>
+<div class="popup">
+
+  <!-- Header -->
+  <div class="hdr">
+    <div class="hdr-top">
+      <div class="logo">K</div>
+      <div style="flex:1;">
+        <div class="hdr-name">Safety AI</div>
+        <div class="hdr-sub">Child protection layer</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Safe Mode Status -->
+    <div class="status-card">
+      <div class="status-icon" id="statusIcon">&#128737;</div>
+      <div class="status-label" id="statusLabel">SAFE MODE ON</div>
+      <div class="status-desc" id="statusDesc">Your browsing is protected</div>
+    </div>
+
+    <!-- Screen Time -->
+    <div class="section">
+      <div class="lbl">Today's Screen Time</div>
+      <div class="card">
+        <div class="time-big" id="timeDisplay">0 min</div>
+        <div class="bar-bg"><div class="bar-fill" id="timeBar" style="width:0%"></div></div>
+        <div class="time-limit" id="timeLimitInfo"></div>
+      </div>
+    </div>
+
+    <!-- Safety Reminders -->
+    <div class="section">
+      <div class="lbl">Safety Reminders</div>
+      <div class="rem"><div class="rem-text"><strong>Keep secrets safe.</strong> Never share your name, address, school, or passwords with AI.</div></div>
+      <div class="rem"><div class="rem-text"><strong>Check it twice.</strong> AI can be wrong — always verify important answers.</div></div>
+      <div class="rem"><div class="rem-text"><strong>Ask a trusted adult</strong> if something feels confusing or upsetting.</div></div>
+    </div>
+
+  </div>
+
+  <!-- Footer with parent settings -->
+  <div class="footer">
+    <span>Safety AI v1.1</span>
+    <button class="lock-btn" id="parentLockBtn" title="Parent settings">&#9881;</button>
+  </div>
+</div>
+
+<!-- Password Overlay -->
+<div class="ovl" id="pwdOverlay">
+  <div class="ovl-card">
+    <div class="ovl-icon">&#128274;</div>
+    <div class="ovl-title">Parent Access</div>
+    <div class="ovl-msg">Enter the parent password to access settings.</div>
+    <input type="password" class="ovl-inp" id="pwdInput" placeholder="Password">
+    <div class="ovl-err" id="pwdError">Wrong password. Try again.</div>
+    <div class="ovl-acts">
+      <button class="btn-sec" id="pwdCancel">Cancel</button>
+      <button class="btn-pri" id="pwdSubmit">Unlock</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

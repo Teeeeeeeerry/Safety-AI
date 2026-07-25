@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Welcome — Safety AI</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #1F3A2E;
+    color: #F5F0E6;
+    font-family: system-ui, -apple-system, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  .card {
+    background: #F5F0E6;
+    width: 420px;
+    max-width: 92vw;
+    padding: 36px 32px;
+    box-shadow: 0 24px 70px rgba(0,0,0,0.4);
+    border-radius: 12px;
+  }
+  .step-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #B89968;
+    margin-bottom: 6px;
+  }
+  .step-title {
+    font-size: 24px;
+    font-weight: 300;
+    color: #1F3A2E;
+    margin-bottom: 22px;
+  }
+  .field { margin-bottom: 14px; }
+  .field-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #3A4A42;
+    margin-bottom: 5px;
+  }
+  input[type="text"], input[type="password"], input[type="number"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid rgba(31,58,46,0.25);
+    background: #EFE9DC;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #1F3A2E;
+    outline: none;
+    border-radius: 8px;
+  }
+  input:focus { border-color: #1F3A2E; }
+  .btn-primary {
+    width: 100%;
+    padding: 12px;
+    background: #1F3A2E;
+    color: #F5F0E6;
+    border: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 6px;
+    border-radius: 8px;
+  }
+  .btn-primary:hover { background: #2a5240; }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .error {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: #7A4030;
+    margin-bottom: 10px;
+    display: none;
+    letter-spacing: 0.05em;
+  }
+  .checkbox-group {
+    border-top: 1px solid rgba(31,58,46,0.1);
+    border-bottom: 1px solid rgba(31,58,46,0.1);
+    margin-bottom: 14px;
+  }
+  .checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 0;
+    cursor: pointer;
+    font-size: 13px;
+    color: #1F3A2E;
+  }
+  .checkbox-group input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: #1F3A2E;
+    flex-shrink: 0;
+  }
+  .site-list { margin-bottom: 14px; }
+  .site-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(31,58,46,0.08);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #1F3A2E;
+  }
+  .site-item:last-child { border-bottom: none; }
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+  .badge-allowed { background: rgba(45,106,79,0.15); color: #2d6a4f; }
+  .badge-blocked { background: rgba(122,64,48,0.15); color: #7A4030; }
+  .toggle-btn {
+    background: none;
+    border: 1px solid rgba(31,58,46,0.2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #3A4A42;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .toggle-btn:hover { background: rgba(31,58,46,0.08); }
+  .step { display: none; }
+  .step.active { display: block; }
+  .progress {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+  .progress-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(31,58,46,0.15);
+  }
+  .progress-dot.active { background: #1F3A2E; }
+  .progress-dot.done { background: #B89968; }
+  .hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: rgba(31,58,46,0.45);
+    margin-bottom: 14px;
+    line-height: 1.6;
+  }
+  .kw-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .kw-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    background: rgba(31,58,46,0.08);
+    border: 1px solid rgba(31,58,46,0.15);
+    padding: 4px 10px;
+    border-radius: 6px;
+    color: #1F3A2E;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .kw-tag button {
+    background: none;
+    border: none;
+    color: rgba(31,58,46,0.4);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+  }
+  .kw-tag button:hover { color: #1F3A2E; }
+</style>
+  <script type="module" crossorigin src="/assets/onboarding-BWPLoMDy.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/constants-BgtvUfsn.js">
+</head>
+<body>
+<div class="card">
+  <!-- Step 1: Password setup -->
+  <div class="step active" id="step1">
+    <div class="progress">
+      <div class="progress-dot active"></div>
+      <div class="progress-dot"></div>
+      <div class="progress-dot"></div>
+      <div class="progress-dot"></div>
+    </div>
+    <div class="step-label">Step 1 of 4</div>
+    <div class="step-title">Create a parent password</div>
+    <div class="hint">This password protects your settings. You'll need it to disable Safe Mode, unlock blocked content, and change time limits.</div>
+    <div class="field">
+      <div class="field-label">Password</div>
+      <input type="password" id="pwd1" placeholder="Choose a password">
+    </div>
+    <div class="field">
+      <div class="field-label">Confirm password</div>
+      <input type="password" id="pwd2" placeholder="Confirm your password">
+    </div>
+    <div class="error" id="step1Error"></div>
+    <button class="btn-primary" id="step1Next">Continue</button>
+  </div>
+
+  <!-- Step 2: Child info -->
+  <div class="step" id="step2">
+    <div class="progress">
+      <div class="progress-dot done"></div>
+      <div class="progress-dot active"></div>
+      <div class="progress-dot"></div>
+      <div class="progress-dot"></div>
+    </div>
+    <div class="step-label">Step 2 of 4</div>
+    <div class="step-title">Tell us about your child</div>
+    <div class="field">
+      <div class="field-label">How old is your child?</div>
+      <input type="number" id="childAge" min="4" max="17" placeholder="Age">
+    </div>
+    <div class="field-label" style="margin:14px 0 4px;">What will they use AI for?</div>
+    <div class="checkbox-group" id="useCases">
+      <label><input type="checkbox" value="research"> Recreational research</label>
+      <label><input type="checkbox" value="creativity"> Enhance creativity</label>
+      <label><input type="checkbox" value="homework"> Assistance with assignments</label>
+      <label><input type="checkbox" value="coding"> Learning how to code</label>
+      <label><input type="checkbox" value="literature"> Searching for literature</label>
+    </div>
+    <div class="error" id="step2Error"></div>
+    <button class="btn-primary" id="step2Next">Continue</button>
+  </div>
+
+  <!-- Step 3: Review sites & keywords -->
+  <div class="step" id="step3">
+    <div class="progress">
+      <div class="progress-dot done"></div>
+      <div class="progress-dot done"></div>
+      <div class="progress-dot active"></div>
+      <div class="progress-dot"></div>
+    </div>
+    <div class="step-label">Step 3 of 4</div>
+    <div class="step-title">Review safety settings</div>
+    <div class="hint">We've suggested settings based on your child's age. You can change these anytime in the extension popup.</div>
+
+    <div class="field-label">AI Sites</div>
+    <div class="site-list" id="siteList"></div>
+
+    <div class="field-label">Blocked Keywords</div>
+    <div class="kw-tags" id="kwTags"></div>
+    <div style="display:flex;gap:6px;margin-bottom:14px;">
+      <input type="text" id="kwInput" placeholder="Add a keyword..." style="flex:1;">
+      <button class="toggle-btn" id="kwAddBtn" style="padding:8px 14px;">Add</button>
+    </div>
+
+    <div class="field-label">Daily Time Limit</div>
+    <div class="field">
+      <input type="number" id="timeLimitInput" min="5" max="480" placeholder="Minutes (e.g. 30)">
+    </div>
+
+    <button class="btn-primary" id="step3Next">Continue</button>
+  </div>
+
+  <!-- Step 4: Done -->
+  <div class="step" id="step4">
+    <div class="progress">
+      <div class="progress-dot done"></div>
+      <div class="progress-dot done"></div>
+      <div class="progress-dot done"></div>
+      <div class="progress-dot active"></div>
+    </div>
+    <div class="step-label">Setup complete</div>
+    <div class="step-title">You're all set!</div>
+    <div class="hint">Safe Mode is now active. Your child can browse approved AI sites with keyword filtering and screen time tracking enabled.<br><br>You can change any setting by clicking the Safety AI icon in your browser toolbar.</div>
+    <div style="text-align:center;font-size:56px;margin:20px 0;">&#9989;</div>
+    <button class="btn-primary" id="finishBtn">Close setup</button>
+  </div>
+</div>
+
+</body>
+</html>
