@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Safety AI — Parent Settings</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #F5F0E6; font-family: system-ui, -apple-system, sans-serif; color: #1F3A2E; }
+
+  /* Layout */
+  .page { max-width: 640px; margin: 0 auto; padding: 32px 24px 40px; }
+  .page-hdr { display: flex; align-items: center; gap: 14px; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid rgba(31,58,46,0.1); }
+  .page-logo { width: 42px; height: 42px; background: #1F3A2E; border: 2px solid #B89968; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; color: #B89968; flex-shrink: 0; }
+  .page-title { font-size: 22px; font-weight: 400; }
+  .page-sub { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #B89968; letter-spacing: 0.18em; text-transform: uppercase; margin-top: 2px; }
+
+  /* Sections */
+  .section { margin-bottom: 28px; }
+  .section-title { font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #B89968; margin-bottom: 10px; }
+  .card { background: #fff; border-radius: 12px; padding: 18px; border: 1px solid rgba(31,58,46,0.08); }
+  .row { display: flex; align-items: center; justify-content: space-between; }
+  .desc { font-size: 13px; color: rgba(31,58,46,0.55); line-height: 1.6; margin-bottom: 14px; }
+
+  /* Toggle */
+  .tgl { position: relative; width: 48px; height: 26px; flex-shrink: 0; }
+  .tgl input { display: none; }
+  .tgl-track { position: absolute; inset: 0; background: rgba(31,58,46,0.18); border-radius: 13px; cursor: pointer; transition: background 0.3s; }
+  .tgl input:checked + .tgl-track { background: #1F3A2E; }
+  .tgl-thumb { position: absolute; top: 2px; left: 2px; width: 22px; height: 22px; background: #F5F0E6; border-radius: 50%; transition: transform 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); pointer-events: none; }
+  .tgl input:checked ~ .tgl-thumb { transform: translateX(22px); }
+
+  /* Buttons */
+  .btn { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 8px 16px; border-radius: 8px; cursor: pointer; border: none; }
+  .btn-dark { background: #1F3A2E; color: #F5F0E6; }
+  .btn-dark:hover { background: #2a5240; }
+  .btn-outline { background: transparent; border: 1px solid rgba(31,58,46,0.25); color: rgba(31,58,46,0.6); }
+  .btn-outline:hover { background: rgba(31,58,46,0.06); }
+
+  /* Screen time */
+  .time-big { font-family: 'JetBrains Mono', monospace; font-size: 32px; font-weight: 700; color: #1F3A2E; }
+  .time-sub { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: rgba(31,58,46,0.45); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+  .bar-bg { height: 5px; background: rgba(31,58,46,0.1); border-radius: 3px; margin-top: 12px; overflow: hidden; }
+  .bar-fill { height: 100%; background: #1F3A2E; border-radius: 3px; transition: width 0.5s; }
+
+  /* Time limit */
+  .limit-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(31,58,46,0.08); }
+  .limit-input { width: 80px; padding: 8px 10px; border: 1px solid rgba(31,58,46,0.2); background: rgba(31,58,46,0.04); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #1F3A2E; outline: none; text-align: center; }
+  .limit-input:focus { border-color: #1F3A2E; }
+  .limit-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(31,58,46,0.5); }
+
+  /* Chart */
+  .chart-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+  .chart-tab { font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 12px; border-radius: 6px; cursor: pointer; border: 1px solid rgba(31,58,46,0.18); background: transparent; color: rgba(31,58,46,0.5); transition: all 0.2s; }
+  .chart-tab.active { background: #1F3A2E; color: #F5F0E6; border-color: #1F3A2E; }
+  .chart-tab:hover:not(.active) { background: rgba(31,58,46,0.06); }
+  .chart-area { width: 100%; height: 180px; position: relative; }
+  .chart-area svg { width: 100%; height: 100%; }
+  .chart-avg-row { display: flex; gap: 10px; margin-top: 12px; justify-content: center; }
+  .chart-avg { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: rgba(31,58,46,0.5); }
+  .chart-avg strong { color: #1F3A2E; font-size: 13px; }
+
+  /* Sites */
+  .site-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(31,58,46,0.06); }
+  .site-item:last-child { border-bottom: none; }
+  .site-name { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #1F3A2E; }
+  .site-badge { font-family: 'JetBrains Mono', monospace; font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; font-weight: 700; }
+  .site-badge.allowed { background: rgba(45,106,79,0.12); color: #2d6a4f; }
+  .site-badge.blocked { background: rgba(122,64,48,0.12); color: #7A4030; }
+  .site-toggle { font-family: 'JetBrains Mono', monospace; background: none; border: 1px solid rgba(31,58,46,0.18); font-size: 9px; padding: 4px 10px; border-radius: 5px; cursor: pointer; color: #3A4A42; letter-spacing: 0.08em; text-transform: uppercase; }
+  .site-toggle:hover { background: rgba(31,58,46,0.06); }
+  .site-del { background: none; border: none; color: rgba(31,58,46,0.25); cursor: pointer; font-size: 16px; padding: 0 4px; line-height: 1; margin-left: 6px; }
+  .site-del:hover { color: #7A4030; }
+  .site-add-row { display: flex; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(31,58,46,0.08); }
+  .site-add-inp { flex: 1; padding: 8px 12px; border: 1px solid rgba(31,58,46,0.2); background: rgba(31,58,46,0.04); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #1F3A2E; outline: none; }
+  .site-add-inp:focus { border-color: #1F3A2E; }
+
+  /* Keywords */
+  .kw-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: rgba(31,58,46,0.04); border-radius: 8px; border-left: 2px solid #B89968; margin-bottom: 6px; }
+  .kw-text { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #1F3A2E; font-weight: 500; }
+  .kw-del { background: none; border: none; color: rgba(31,58,46,0.3); cursor: pointer; font-size: 16px; padding: 0 4px; line-height: 1; }
+  .kw-del:hover { color: #1F3A2E; }
+  .kw-row { display: flex; gap: 8px; margin-top: 10px; }
+  .kw-inp { flex: 1; padding: 8px 12px; border: 1px solid rgba(31,58,46,0.2); background: rgba(31,58,46,0.04); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #1F3A2E; outline: none; }
+  .kw-inp:focus { border-color: #1F3A2E; }
+  .kw-empty { font-size: 13px; color: rgba(31,58,46,0.35); font-style: italic; text-align: center; padding: 16px 0; }
+
+  /* Report */
+  .report-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .report-stat { background: rgba(31,58,46,0.04); border-radius: 8px; padding: 12px; text-align: center; }
+  .report-stat-value { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; color: #1F3A2E; }
+  .report-stat-label { font-family: 'JetBrains Mono', monospace; font-size: 8px; color: rgba(31,58,46,0.45); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+
+  /* Password change */
+  .pwd-fields { display: flex; flex-direction: column; gap: 10px; }
+  .pwd-input { width: 100%; padding: 10px 12px; border: 1px solid rgba(31,58,46,0.2); background: rgba(31,58,46,0.04); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #1F3A2E; outline: none; }
+  .pwd-input:focus { border-color: #1F3A2E; }
+  .pwd-error { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #7A4030; display: none; }
+  .pwd-success { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #2d6a4f; display: none; }
+
+  /* Auth gate */
+  .auth-gate { display: flex; align-items: center; justify-content: center; min-height: 80vh; }
+  .auth-card { background: #fff; border-radius: 16px; padding: 32px; width: 340px; text-align: center; box-shadow: 0 8px 32px rgba(31,58,46,0.12); }
+  .auth-icon { font-size: 48px; margin-bottom: 12px; }
+  .auth-title { font-size: 20px; font-weight: 400; margin-bottom: 8px; }
+  .auth-msg { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(31,58,46,0.5); margin-bottom: 18px; line-height: 1.6; }
+  .auth-input { width: 100%; padding: 12px; border: 1px solid rgba(31,58,46,0.22); background: rgba(31,58,46,0.04); border-radius: 10px; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #1F3A2E; outline: none; text-align: center; margin-bottom: 10px; }
+  .auth-input:focus { border-color: #1F3A2E; }
+  .auth-error { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #7A4030; margin-bottom: 10px; display: none; }
+  .auth-btn { width: 100%; padding: 12px; background: #1F3A2E; color: #F5F0E6; border: none; border-radius: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; }
+  .auth-btn:hover { background: #2a5240; }
+
+  /* Footer */
+  .page-footer { text-align: center; padding: 20px 0 0; border-top: 1px solid rgba(31,58,46,0.08); margin-top: 12px; }
+  .page-footer p { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: rgba(31,58,46,0.3); letter-spacing: 0.06em; line-height: 1.7; }
+</style>
+  <script type="module" crossorigin src="/assets/options-u6G15XSM.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/constants-BgtvUfsn.js">
+</head>
+<body>
+
+<!-- Auth gate (shown first) -->
+<div class="auth-gate" id="authGate">
+  <div class="auth-card">
+    <div class="auth-icon">&#128274;</div>
+    <div class="auth-title">Parent Settings</div>
+    <div class="auth-msg">Enter your parent password to access safety settings.</div>
+    <input type="password" class="auth-input" id="authInput" placeholder="Password">
+    <div class="auth-error" id="authError">Wrong password. Try again.</div>
+    <button class="auth-btn" id="authBtn">Unlock</button>
+  </div>
+</div>
+
+<!-- Settings (hidden until authenticated) -->
+<div class="page" id="settingsPage" style="display:none;">
+  <div class="page-hdr">
+    <div class="page-logo">K</div>
+    <div>
+      <div class="page-title">Parent Settings</div>
+      <div class="page-sub">Safety AI management</div>
+    </div>
+  </div>
+
+  <!-- Safe Mode -->
+  <div class="section">
+    <div class="section-title">Safe Mode</div>
+    <div class="card">
+      <div class="row">
+        <div>
+          <div style="font-size:15px;font-weight:500;">Safe Mode</div>
+          <div style="font-size:12px;color:rgba(31,58,46,0.5);margin-top:3px;">Protects your child while using AI sites</div>
+        </div>
+        <label class="tgl">
+          <input type="checkbox" id="safeModeToggle">
+          <div class="tgl-track"></div>
+          <div class="tgl-thumb"></div>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen Time & Limit -->
+  <div class="section">
+    <div class="section-title">Screen Time</div>
+    <div class="card">
+      <div class="row">
+        <div>
+          <div class="time-big" id="timeDisplay">0 min</div>
+          <div class="time-sub">on AI sites today</div>
+        </div>
+        <button class="btn btn-outline" id="resetTimeBtn">Reset</button>
+      </div>
+      <div class="bar-bg"><div class="bar-fill" id="timeBar" style="width:0%"></div></div>
+      <div class="limit-row">
+        <span class="limit-label">Daily limit:</span>
+        <input type="number" class="limit-input" id="limitInput" min="5" max="480" placeholder="--">
+        <span class="limit-label">min</span>
+        <button class="btn btn-dark" id="saveLimitBtn">Save</button>
+        <button class="btn btn-outline" id="clearLimitBtn">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Usage Chart -->
+  <div class="section">
+    <div class="section-title">Usage History</div>
+    <div class="card">
+      <div class="chart-tabs">
+        <button class="chart-tab active" data-range="1d">1D</button>
+        <button class="chart-tab" data-range="7d">7D</button>
+        <button class="chart-tab" data-range="30d">30D</button>
+        <button class="chart-tab" data-range="1y">1Y</button>
+      </div>
+      <div class="chart-area" id="chartArea"></div>
+      <div class="chart-avg-row" id="chartAvgRow"></div>
+    </div>
+  </div>
+
+  <!-- Usage Report -->
+  <div class="section">
+    <div class="section-title">Today's Report</div>
+    <div class="card">
+      <div class="report-summary">
+        <div class="report-stat">
+          <div class="report-stat-value" id="reportTime">0</div>
+          <div class="report-stat-label">Minutes used</div>
+        </div>
+        <div class="report-stat">
+          <div class="report-stat-value" id="reportKeywords">0</div>
+          <div class="report-stat-label">Keywords blocked</div>
+        </div>
+      </div>
+      <button class="btn btn-outline" id="exportReportBtn" style="width:100%;">Export report as HTML</button>
+    </div>
+  </div>
+
+  <!-- AI Sites -->
+  <div class="section">
+    <div class="section-title">AI Site Access</div>
+    <div class="card">
+      <div class="desc">Allowed sites have keyword filtering active. Blocked sites redirect to a safety page.</div>
+      <div id="siteList"></div>
+      <div class="site-add-row">
+        <input class="site-add-inp" id="siteAddInput" placeholder="Add a domain (e.g. example.com)" type="text">
+        <button class="btn btn-dark" id="siteAddBtn">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Keywords -->
+  <div class="section">
+    <div class="section-title">Blocked Keywords</div>
+    <div class="card">
+      <div class="desc">When an AI response contains any keyword below, the page will be blocked until a parent unlocks it.</div>
+      <div id="kwList"></div>
+      <div class="kw-row">
+        <input class="kw-inp" id="kwInput" placeholder="Type a keyword..." type="text">
+        <button class="btn btn-dark" id="kwAddBtn">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Password -->
+  <div class="section">
+    <div class="section-title">Change Password</div>
+    <div class="card">
+      <div class="pwd-fields">
+        <input type="password" class="pwd-input" id="currentPwd" placeholder="Current password">
+        <input type="password" class="pwd-input" id="newPwd1" placeholder="New password">
+        <input type="password" class="pwd-input" id="newPwd2" placeholder="Confirm new password">
+        <div class="pwd-error" id="pwdChangeError"></div>
+        <div class="pwd-success" id="pwdChangeSuccess">Password changed successfully.</div>
+        <button class="btn btn-dark" id="changePwdBtn">Change password</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <p>Safety AI grew from a classroom hackathon project into a<br>production extension — built by students, refined for families.</p>
+  </div>
+
+</div>
+
+</body>
+</html>
