@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Safety AI — Keep kids safe on AI websites</title>
+<meta name="description" content="A privacy-first parental layer for ChatGPT, Claude, Gemini and more. Real-time content safety, screen-time limits, everything stored on your device.">
+<link rel="icon" href="assets/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:   #F5F0E6;
+    --cream-2: #EFE8D8;
+    --green:   #1F3A2E;
+    --green-8: rgba(31,58,46,0.08);
+    --green-15: rgba(31,58,46,0.15);
+    --green-30: rgba(31,58,46,0.30);
+    --green-55: rgba(31,58,46,0.55);
+    --green-70: rgba(31,58,46,0.70);
+    --brass:   #B89968;
+    --brass-40: rgba(184,153,104,0.4);
+    --rust:    #7A4030;
+    --white:   #ffffff;
+    --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --max: 1180px;
+    --ease: cubic-bezier(.22,.61,.36,1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--cream);
+    color: var(--green);
+    font-family: var(--sans);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
+
+  /* ---------- Utilities ---------- */
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 32px; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 10px; font-weight: 700;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--brass);
+    background: var(--green);
+    padding: 8px 14px 8px 12px; border-radius: 999px;
+  }
+  .eyebrow::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--brass);
+  }
+  .eyebrow.on-cream {
+    background: transparent;
+    border: 1px solid var(--green-15);
+    color: var(--green);
+  }
+  .eyebrow.on-cream::before { background: var(--brass); }
+
+  h1, h2, h3, h4 { font-family: var(--sans); font-weight: 700; letter-spacing: -0.02em; line-height: 1.05; color: var(--green); }
+  h1 { font-size: clamp(40px, 6.4vw, 76px); }
+  h2 { font-size: clamp(32px, 4.2vw, 52px); line-height: 1.08; }
+  h3 { font-size: 20px; letter-spacing: -0.01em; }
+  h4 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.16em; font-family: var(--mono); color: var(--brass); }
+
+  p.lede { font-size: clamp(16px, 1.4vw, 19px); color: var(--green-70); max-width: 560px; }
+  p { color: var(--green-70); }
+
+  .mono { font-family: var(--mono); }
+  .brass { color: var(--brass); }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 22px; border-radius: 12px;
+    font-family: var(--mono); font-size: 12px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    transition: transform .25s var(--ease), background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease), box-shadow .25s var(--ease);
+    cursor: pointer; border: 1px solid transparent;
+    will-change: transform;
+  }
+  .btn-primary {
+    background: var(--green); color: var(--cream);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.02), 0 8px 24px -12px rgba(31,58,46,0.5);
+  }
+  .btn-primary:hover { background: #16281f; transform: translateY(-1px); box-shadow: 0 1px 0 rgba(0,0,0,0.02), 0 14px 32px -14px rgba(31,58,46,0.55); }
+  .btn-primary .arrow { transition: transform .3s var(--ease); }
+  .btn-primary:hover .arrow { transform: translateX(3px); }
+  .btn-ghost {
+    background: transparent; color: var(--green);
+    border: 1px solid var(--green-15);
+  }
+  .btn-ghost:hover { border-color: var(--brass); color: var(--green); }
+  .btn-ghost .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brass); box-shadow: 0 0 0 0 var(--brass-40); animation: pulse 2.4s infinite; }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 var(--brass-40); }
+    70% { box-shadow: 0 0 0 8px rgba(184,153,104,0); }
+    100% { box-shadow: 0 0 0 0 rgba(184,153,104,0); }
+  }
+
+  /* ---------- Nav ---------- */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    padding: 18px 0;
+    transition: background .25s var(--ease), backdrop-filter .25s var(--ease), border-color .25s var(--ease);
+    border-bottom: 1px solid transparent;
+  }
+  .nav.scrolled {
+    background: rgba(245,240,230,0.82);
+    backdrop-filter: saturate(140%) blur(10px);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    border-bottom-color: var(--green-8);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-mark {
+    width: 34px; height: 34px; border-radius: 8px;
+    background: var(--green); border: 1.5px solid var(--brass);
+    display: grid; place-items: center;
+    color: var(--brass); font-family: var(--mono); font-weight: 700; font-size: 16px;
+  }
+  .brand-name { font-family: var(--sans); font-weight: 500; font-size: 15px; color: var(--green); }
+  .brand-name .sub { display: block; font-family: var(--mono); font-size: 8px; color: var(--brass); letter-spacing: 0.24em; text-transform: uppercase; margin-top: 1px; }
+  .nav-links { display: flex; align-items: center; gap: 6px; }
+  .nav-links a {
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--green-70); padding: 8px 12px; border-radius: 8px;
+    transition: color .2s var(--ease), background .2s var(--ease);
+  }
+  .nav-links a:hover { color: var(--green); background: var(--green-8); }
+  .nav-links a.nav-cta {
+    padding: 9px 16px; border-radius: 8px; background: var(--green); color: var(--cream);
+    font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+    transition: background .25s var(--ease);
+  }
+  .nav-links a.nav-cta:hover { background: #16281f; color: var(--cream); }
+  @media (max-width: 780px) {
+    .nav-links a:not(.nav-cta) { display: none; }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero { padding: 60px 0 100px; position: relative; }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 60px; align-items: center; }
+  @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; gap: 48px; } }
+  .hero h1 span.accent { color: var(--brass); }
+  .hero .lede { margin-top: 22px; }
+  .hero-ctas { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 12px; }
+  .hero-meta { margin-top: 22px; display: flex; gap: 20px; flex-wrap: wrap; }
+  .hero-meta .item { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--green-55); display: flex; align-items: center; gap: 8px; }
+  .hero-meta .item::before { content: ""; width: 4px; height: 4px; border-radius: 50%; background: var(--brass); }
+
+  /* Subtle drifting shield behind hero */
+  .hero-orb {
+    position: absolute; top: 0; right: -6%;
+    width: 720px; height: 720px; pointer-events: none; z-index: 0;
+    background: radial-gradient(closest-side, rgba(184,153,104,0.14), transparent 70%);
+    animation: drift 18s var(--ease) infinite alternate;
+  }
+  @keyframes drift {
+    0% { transform: translate3d(0,0,0) scale(1); }
+    100% { transform: translate3d(-30px,20px,0) scale(1.05); }
+  }
+  .hero-grid > * { position: relative; z-index: 1; }
+
+  /* ---------- Popup mockup (hero right) — mirrors src/popup/popup.css ---------- */
+  .mock-stage {
+    display: flex; align-items: center; justify-content: center;
+    perspective: 1200px;
+  }
+  .popup {
+    width: 320px; max-width: 100%;
+    background: var(--cream);
+    border-radius: 14px;
+    border: 1px solid var(--green-8);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.6) inset,
+      0 30px 60px -25px rgba(31,58,46,0.45),
+      0 8px 20px -12px rgba(31,58,46,0.35);
+    overflow: hidden;
+    font-family: var(--mono);
+    color: var(--green);
+    display: flex; flex-direction: column;
+    animation: floaty 6.5s var(--ease) infinite alternate;
+    transform: rotate3d(1,-1,0,3deg);
+  }
+  @keyframes floaty {
+    0% { transform: rotate3d(1,-1,0,3deg) translateY(0); }
+    100% { transform: rotate3d(1,-1,0,3deg) translateY(-10px); }
+  }
+  /* Header */
+  .p-hdr { background: var(--green); padding: 10px 14px; flex-shrink: 0; }
+  .p-hdr-top { display: flex; align-items: center; gap: 10px; }
+  .p-logo {
+    width: 30px; height: 30px; border-radius: 7px;
+    background: var(--green); border: 1.5px solid var(--brass);
+    display: grid; place-items: center;
+    color: var(--brass); font-family: var(--mono); font-weight: 700; font-size: 16px;
+    flex-shrink: 0;
+  }
+  .p-name { font-family: var(--sans); font-size: 14px; font-weight: 400; color: var(--cream); line-height: 1.1; }
+  .p-sub-hdr { font-family: var(--mono); font-size: 7px; color: var(--brass); letter-spacing: 0.18em; text-transform: uppercase; margin-top: 1px; }
+
+  /* Content */
+  .p-content { flex: 1; padding: 10px 12px; }
+
+  /* Status card */
+  .p-status {
+    text-align: center; padding: 14px 12px; margin-bottom: 10px;
+    background: var(--green); border-radius: 10px; color: var(--cream);
+    animation: statusPulse 4s var(--ease) infinite;
+  }
+  @keyframes statusPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(184,153,104,0.0); }
+    50%      { box-shadow: 0 0 0 0 rgba(184,153,104,0.0); }
+  }
+  .p-status-icon {
+    font-size: 24px; line-height: 1; margin-bottom: 4px;
+    display: inline-block;
+    animation: shieldBob 4s var(--ease) infinite;
+  }
+  @keyframes shieldBob {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50%      { transform: translateY(-2px) scale(1.05); }
+  }
+  .p-status-label {
+    font-family: var(--mono);
+    font-size: 10px; font-weight: 700; letter-spacing: 0.22em;
+    text-transform: uppercase; margin-bottom: 2px;
+  }
+  .p-status-desc { font-family: var(--sans); font-size: 11px; opacity: 0.7; }
+
+  /* Sections */
+  .p-section { margin-bottom: 8px; }
+  .p-section:last-child { margin-bottom: 0; }
+  .p-lbl {
+    font-family: var(--mono);
+    font-size: 7px; font-weight: 700; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--brass); margin-bottom: 4px;
+  }
+  .p-card {
+    background: #fff; border-radius: 10px; padding: 10px 12px;
+    border: 1px solid rgba(31,58,46,0.09);
+  }
+
+  /* Screen time */
+  .p-time {
+    font-family: var(--mono);
+    font-size: 20px; font-weight: 700; color: var(--green);
+    letter-spacing: -0.02em; line-height: 1;
+  }
+  .p-bar {
+    height: 3px; background: rgba(31,58,46,0.1); border-radius: 2px;
+    margin-top: 6px; overflow: hidden;
+  }
+  .p-bar-fill {
+    height: 100%; background: var(--green); border-radius: 2px;
+    width: 0; animation: barfill 1.6s var(--ease) 0.4s forwards;
+  }
+  @keyframes barfill { to { width: 57%; } }
+  .p-limit {
+    font-family: var(--mono);
+    font-size: 7px; color: rgba(31,58,46,0.45);
+    letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px;
+  }
+
+  /* Reminders */
+  .p-rem {
+    display: flex; align-items: flex-start; padding: 6px 9px;
+    background: rgba(31,58,46,0.04); border-radius: 7px;
+    border-left: 2px solid var(--brass);
+    margin-bottom: 4px;
+  }
+  .p-rem:last-child { margin-bottom: 0; }
+  .p-rem-text {
+    font-family: var(--sans);
+    font-size: 10px; color: var(--green); line-height: 1.45;
+  }
+  .p-rem-text strong { font-weight: 600; }
+
+  /* Footer */
+  .p-foot {
+    padding: 6px 12px; display: flex; align-items: center; justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 7px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(31,58,46,0.25);
+    border-top: 1px solid var(--green-8);
+    flex-shrink: 0;
+  }
+  .p-lock {
+    background: none; border: 1px solid rgba(31,58,46,0.15); border-radius: 6px;
+    padding: 3px 7px; font-size: 14px; line-height: 1;
+    color: rgba(31,58,46,0.35);
+  }
+
+  /* ---------- Section framing ---------- */
+  section { padding: 96px 0; position: relative; }
+  section.tight { padding: 80px 0; }
+  .sec-head { max-width: 720px; margin-bottom: 56px; }
+  .sec-head .eyebrow { margin-bottom: 20px; }
+  .sec-head p { margin-top: 18px; font-size: 17px; }
+
+  /* ---------- Problem / research ---------- */
+  .problem { background: var(--green); color: var(--cream); }
+  .problem h2, .problem h3, .problem h4 { color: var(--cream); }
+  .problem p { color: rgba(245,240,230,0.75); }
+  .problem .eyebrow { background: transparent; border: 1px solid rgba(184,153,104,0.4); color: var(--brass); }
+  .problem .eyebrow::before { background: var(--brass); }
+
+  .stat-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;
+    border-top: 1px solid rgba(245,240,230,0.15);
+    border-bottom: 1px solid rgba(245,240,230,0.15);
+    background: rgba(245,240,230,0.08);
+  }
+  @media (max-width: 820px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+  .stat {
+    padding: 34px 26px; background: var(--green);
+    display: flex; flex-direction: column; gap: 12px;
+    position: relative; overflow: hidden;
+  }
+  .stat .n { font-family: var(--mono); font-weight: 700; font-size: clamp(40px, 4.6vw, 60px); color: var(--brass); letter-spacing: -0.03em; line-height: 1; }
+  .stat .label { font-size: 14px; color: var(--cream); line-height: 1.4; }
+  .stat .src { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(184,153,104,0.7); margin-top: auto; }
+
+  .pullquote {
+    margin-top: 64px; max-width: 880px;
+    font-family: var(--sans); font-weight: 700;
+    font-size: clamp(24px, 3.2vw, 38px); line-height: 1.2;
+    letter-spacing: -0.02em; color: var(--cream);
+  }
+  .pullquote .em { color: var(--brass); }
+  .pullquote-src { margin-top: 20px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(184,153,104,0.8); }
+
+  .sources {
+    margin-top: 48px; padding-top: 24px; border-top: 1px solid rgba(245,240,230,0.14);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(245,240,230,0.55);
+  }
+
+  /* ---------- Features ---------- */
+  .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 900px) { .feat-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .feat-grid { grid-template-columns: 1fr; } }
+  .feat {
+    background: var(--white);
+    border: 1px solid var(--green-8);
+    border-radius: 16px;
+    padding: 28px 24px 26px;
+    transition: transform .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease);
+    position: relative;
+  }
+  .feat:hover {
+    transform: translateY(-3px);
+    border-color: var(--brass);
+    box-shadow: 0 14px 28px -18px rgba(31,58,46,0.25);
+  }
+  .feat .icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--green);
+    display: grid; place-items: center;
+    color: var(--brass);
+    margin-bottom: 22px;
+  }
+  .feat .icon svg { width: 20px; height: 20px; }
+  .feat h3 { font-size: 18px; margin-bottom: 8px; letter-spacing: -0.01em; }
+  .feat p { font-size: 14.5px; color: var(--green-70); }
+  .feat .tag {
+    position: absolute; top: 20px; right: 20px;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--brass);
+  }
+
+  /* ---------- Showcase ---------- */
+  .showcase { background: var(--cream-2); }
+  .shot-grid { display: grid; grid-template-columns: 1fr; gap: 32px; }
+  .shot {
+    background: var(--cream);
+    border-radius: 20px;
+    border: 1px solid var(--green-8);
+    padding: 8px;
+    box-shadow: 0 24px 48px -30px rgba(31,58,46,0.4);
+    overflow: hidden;
+  }
+  .shot img { width: 100%; height: auto; border-radius: 14px; }
+
+  /* ---------- How it works ---------- */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  @media (max-width: 820px) { .steps { grid-template-columns: 1fr; } }
+  .step {
+    padding: 32px 28px;
+    border-top: 1px solid var(--green-15);
+    position: relative;
+  }
+  .step .n {
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.24em; color: var(--brass);
+    display: inline-block; margin-bottom: 16px;
+  }
+  .step h3 { font-size: 22px; margin-bottom: 12px; }
+  .step p { font-size: 14.5px; }
+  .step code {
+    display: inline-block; font-family: var(--mono); font-size: 12px;
+    background: var(--green-8); color: var(--green);
+    padding: 2px 8px; border-radius: 5px;
+  }
+
+  /* ---------- Privacy ---------- */
+  .privacy { background: var(--green); color: var(--cream); }
+  .privacy h2 { color: var(--cream); }
+  .privacy-inner { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: center; }
+  @media (max-width: 900px) { .privacy-inner { grid-template-columns: 1fr; gap: 40px; } }
+  .privacy p { color: rgba(245,240,230,0.75); font-size: 17px; }
+  .privacy-list { display: flex; flex-direction: column; gap: 18px; }
+  .p-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 20px 22px; border-radius: 12px;
+    background: rgba(245,240,230,0.06);
+    border: 1px solid rgba(245,240,230,0.10);
+  }
+  .p-item .tick {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--brass); color: var(--green);
+    display: grid; place-items: center; margin-top: 2px;
+  }
+  .p-item .tick svg { width: 12px; height: 12px; }
+  .p-item h4 { color: var(--cream); font-family: var(--sans); font-size: 15px; letter-spacing: -0.005em; text-transform: none; margin-bottom: 2px; }
+  .p-item p { color: rgba(245,240,230,0.7); font-size: 13.5px; }
+
+  /* ---------- Final CTA ---------- */
+  .cta-final { padding: 120px 0; text-align: center; }
+  .cta-final h2 { max-width: 780px; margin: 20px auto 22px; }
+  .cta-final p.lede { margin: 0 auto; }
+  .cta-final .hero-ctas { justify-content: center; margin-top: 34px; }
+
+  /* ---------- Footer ---------- */
+  .footer {
+    border-top: 1px solid var(--green-8);
+    padding: 40px 0 60px;
+    color: var(--green-55);
+  }
+  .footer-inner { display: flex; justify-content: space-between; gap: 24px; align-items: center; flex-wrap: wrap; }
+  .footer .brand-name { color: var(--green); }
+  .footer .credits { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--green-55); }
+  .footer .credits a { color: var(--green); }
+  .footer .credits a:hover { color: var(--brass); }
+  .team-line { font-family: var(--mono); font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--green-30); text-align: right; }
+
+  /* ---------- Reveal animation ---------- */
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+  .reveal.in { opacity: 1; transform: none; }
+  .reveal.d1 { transition-delay: .06s; }
+  .reveal.d2 { transition-delay: .12s; }
+  .reveal.d3 { transition-delay: .18s; }
+  .reveal.d4 { transition-delay: .24s; }
+  .reveal.d5 { transition-delay: .30s; }
+  .reveal.d6 { transition-delay: .36s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal.in { opacity: 1; transform: none; transition: none; }
+    .popup, .p-shield, .hero-orb, .p-bar-fill, .btn-ghost .dot { animation: none !important; }
+    html { scroll-behavior: auto; }
+  }
+
+  /* Selection */
+  ::selection { background: var(--brass); color: var(--green); }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark">K</span>
+      <span class="brand-name">Safety AI<span class="sub">Child Protection Layer</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="#problem">The problem</a>
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#privacy">Privacy</a>
+      <a class="nav-cta" href="https://github.com/Teeeeeeeerry/Safety-AI/releases/tag/v.1.1.0" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <div class="hero-orb" aria-hidden="true"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow on-cream reveal">Safety AI · By Team Safekids</span>
+      <h1 class="reveal d1" style="margin-top:24px;">
+        Keep kids <span class="accent">safe</span><br>on AI websites.
+      </h1>
+      <p class="lede reveal d2">
+        A privacy-first parental layer for ChatGPT, Claude, Gemini and more —
+        real-time content safety, screen-time limits, and total peace of mind.
+        Everything stays on your device.
+      </p>
+      <div class="hero-ctas reveal d3">
+        <a class="btn btn-primary" href="https://github.com/Teeeeeeeerry/Safety-AI/releases/tag/v.1.1.0" target="_blank" rel="noopener">
+          View on GitHub
+          <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <span class="btn btn-ghost">
+          <span class="dot"></span>
+          Coming to the Chrome Web Store
+        </span>
+      </div>
+      <div class="hero-meta reveal d4">
+        <span class="item">Manifest V3</span>
+        <span class="item">No accounts</span>
+        <span class="item">No servers</span>
+        <span class="item">v1.1</span>
+      </div>
+    </div>
+
+    <div class="mock-stage reveal d2">
+      <div class="popup" role="img" aria-label="Safety AI popup mockup: safe mode on, 34 of 60 minutes of screen time used, three safety reminders.">
+        <div class="p-hdr">
+          <div class="p-hdr-top">
+            <div class="p-logo">K</div>
+            <div style="flex:1;">
+              <div class="p-name">Safety AI</div>
+              <div class="p-sub-hdr">Child protection layer</div>
+            </div>
+          </div>
+        </div>
+        <div class="p-content">
+          <div class="p-status">
+            <div class="p-status-icon" aria-hidden="true">&#128737;&#65039;</div>
+            <div class="p-status-label">SAFE MODE ON</div>
+            <div class="p-status-desc">Your browsing is protected</div>
+          </div>
+
+          <div class="p-section">
+            <div class="p-lbl">Today's Screen Time</div>
+            <div class="p-card">
+              <div class="p-time">34 min</div>
+              <div class="p-bar"><div class="p-bar-fill"></div></div>
+              <div class="p-limit">60 min limit · 26 remaining</div>
+            </div>
+          </div>
+
+          <div class="p-section">
+            <div class="p-lbl">Safety Reminders</div>
+            <div class="p-rem"><div class="p-rem-text"><strong>Keep secrets safe.</strong> Never share your name, address, school, or passwords with AI.</div></div>
+            <div class="p-rem"><div class="p-rem-text"><strong>Check it twice.</strong> AI can be wrong &mdash; always verify important answers.</div></div>
+            <div class="p-rem"><div class="p-rem-text"><strong>Ask a trusted adult</strong> if something feels confusing or upsetting.</div></div>
+          </div>
+        </div>
+        <div class="p-foot">
+          <span>Safety AI v1.1</span>
+          <span class="p-lock" aria-hidden="true">&#9881;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ PROBLEM / RESEARCH ============ -->
+<section class="problem" id="problem">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">The evidence</span>
+      <h2>Children are already in the room.<br>The systems meeting them weren't built to keep them safe.</h2>
+      <p>Independent audits, national surveys and case reports over 2023–2026 point to the same pattern:
+      unsafe content, engineered agreement, and a widening supervision gap that most parents are unaware of.</p>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat reveal">
+        <div class="n">79<span style="font-size:0.55em;">%</span></div>
+        <div class="label">of Australian children aged 10–17 have used an AI assistant or companion.</div>
+        <div class="src">eSafety Commissioner, 2026</div>
+      </div>
+      <div class="stat reveal d1">
+        <div class="n">86<span style="font-size:0.55em;">%</span></div>
+        <div class="label">of surveyed children acted on the AI advice they were given.</div>
+        <div class="src">arXiv, 2024</div>
+      </div>
+      <div class="stat reveal d2">
+        <div class="n">1<span style="font-size:0.55em;"> in </span>3</div>
+        <div class="label">children admitted telling AI things they wouldn't tell parents, teachers, or friends.</div>
+        <div class="src">Research synthesis, 2025–2026</div>
+      </div>
+      <div class="stat reveal d3">
+        <div class="n">55<span style="font-size:0.55em;">%</span></div>
+        <div class="label">of children currently use AI with zero parental supervision.</div>
+        <div class="src">Cited in PechaKucha, 2026</div>
+      </div>
+    </div>
+
+    <blockquote class="pullquote reveal">
+      &ldquo;When not designed carefully, chatbots can compound rather than dispel distress
+      &mdash; <span class="em">particularly risky for young users</span> without the emotional resilience
+      to handle a cold or confusing response.&rdquo;
+      <div class="pullquote-src">UNICEF briefing · cited in AI's Empathy Gap, SAGE, 2024</div>
+    </blockquote>
+
+    <div class="sources reveal">
+      Sources: eSafety Commissioner · SAGE Journal of Early Childhood Research · BBC · SSRN · arXiv · UNICEF · QUT Digital Child Centre · Taylor &amp; Francis
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow on-cream">What Safety AI does</span>
+      <h2>Six layers of protection.<br>One quiet extension.</h2>
+      <p>Safety AI runs in the background on the AI sites your child uses.
+      No accounts, no dashboards to babysit, no data leaving your machine.</p>
+    </div>
+
+    <div class="feat-grid">
+      <div class="feat reveal">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 4v6c0 5-3.8 9.5-9 10-5.2-.5-9-5-9-10V6l9-4z"/></svg>
+        </div>
+        <span class="tag">01</span>
+        <h3>Safe Mode</h3>
+        <p>Real-time content scanning on allowed AI sites flags harmful or inappropriate keywords the moment they appear.</p>
+      </div>
+
+      <div class="feat reveal d1">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </div>
+        <span class="tag">02</span>
+        <h3>Screen-time limits</h3>
+        <p>Set a daily cap in minutes. Access pauses automatically once the limit is reached — no negotiation, no workarounds.</p>
+      </div>
+
+      <div class="feat reveal d2">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M6 17V9M10 17v-5M14 17V6M18 17v-8"/></svg>
+        </div>
+        <span class="tag">03</span>
+        <h3>Usage insight</h3>
+        <p>See exactly how much time is spent across AI tools with 1D, 7D, 30D and 1Y charts — all stored locally.</p>
+      </div>
+
+      <div class="feat reveal d3">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 010 18M12 3a15 15 0 000 18"/></svg>
+        </div>
+        <span class="tag">04</span>
+        <h3>Allow / block list</h3>
+        <p>Pre-loaded for ChatGPT, Claude, Gemini, Copilot, Perplexity and more. Add your own custom sites.</p>
+      </div>
+
+      <div class="feat reveal d4">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
+        </div>
+        <span class="tag">05</span>
+        <h3>Parent password</h3>
+        <p>PBKDF2-hashed parent password protects every setting. A 60-second inactivity auto-lock keeps unlocked sessions safe.</p>
+      </div>
+
+      <div class="feat reveal d5">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 12h6M12 9v6"/></svg>
+        </div>
+        <span class="tag">06</span>
+        <h3>On-screen reminders</h3>
+        <p>A discreet, draggable timer widget shows remaining time and gentle safety prompts while the child browses.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SHOWCASE ============ -->
+<section class="showcase tight" id="see">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow on-cream">Inside the extension</span>
+      <h2>Calm, quiet, unmistakable.</h2>
+      <p>Every screen is designed to be understood at a glance — the parent's, and the child's.</p>
+    </div>
+    <div class="shot-grid">
+      <div class="shot reveal"><img src="assets/screenshot-1.png" alt="Safety AI hero — Keep kids safe on AI websites, with popup showing safe mode on, screen time and reminders."></div>
+      <div class="shot reveal d1"><img src="assets/screenshot-2.png" alt="Healthy limits, automatically — daily limits, hourly usage charts, parent password with 60-second auto-lock."></div>
+      <div class="shot reveal d2"><img src="assets/screenshot-3.png" alt="See the full picture — 4h 12m tracked this week, weekly average line chart, allow/block list controls."></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow on-cream">How it works</span>
+      <h2>Three minutes to set up.<br>Then it just runs.</h2>
+    </div>
+
+    <div class="steps">
+      <div class="step reveal">
+        <div class="n">Step 01</div>
+        <h3>Load the extension</h3>
+        <p>Open <code>chrome://extensions</code>, turn on <b>Developer mode</b>, then click <b>Load unpacked</b> and select the <code>SafekidExtension</code> folder.</p>
+      </div>
+      <div class="step reveal d1">
+        <div class="n">Step 02</div>
+        <h3>Set a parent password</h3>
+        <p>Choose a password on first run. It's hashed with PBKDF2 and stored locally. Only you can change settings after that.</p>
+      </div>
+      <div class="step reveal d2">
+        <div class="n">Step 03</div>
+        <h3>Pick sites &amp; limits</h3>
+        <p>Enable Safe Mode, set a daily cap in minutes, and choose which AI sites are allowed or blocked. That's it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRIVACY ============ -->
+<section class="privacy" id="privacy">
+  <div class="wrap privacy-inner">
+    <div class="reveal">
+      <span class="eyebrow" style="background:rgba(184,153,104,0.12); border-color:rgba(184,153,104,0.4);">Privacy</span>
+      <h2 style="margin-top:20px;">Nothing leaves the device.</h2>
+      <p style="margin-top:18px;">
+        Most parental tools trade privacy for control — accounts, cloud dashboards, telemetry, a growing profile of your child.
+        Safety AI takes the opposite path. All settings and history live in <span class="mono brass">chrome.storage.local</span> on your own machine.
+      </p>
+    </div>
+    <div class="privacy-list">
+      <div class="p-item reveal d1">
+        <span class="tick" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 12 10 17 20 7"/></svg>
+        </span>
+        <div>
+          <h4>No accounts, ever.</h4>
+          <p>No sign-in, no email, no identifier tied to your child.</p>
+        </div>
+      </div>
+      <div class="p-item reveal d2">
+        <span class="tick" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 12 10 17 20 7"/></svg>
+        </span>
+        <div>
+          <h4>No analytics, no telemetry.</h4>
+          <p>The extension never phones home. There is no home.</p>
+        </div>
+      </div>
+      <div class="p-item reveal d3">
+        <span class="tick" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 12 10 17 20 7"/></svg>
+        </span>
+        <div>
+          <h4>No servers.</h4>
+          <p>The whole thing is local code and static rules — audit it on GitHub.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA FINAL ============ -->
+<section class="cta-final">
+  <div class="wrap">
+    <span class="eyebrow on-cream reveal">Get started</span>
+    <h2 class="reveal d1">A quiet safety net for a room that's already loud.</h2>
+    <p class="lede reveal d2">Open source, Manifest V3, Chrome-compatible. Grab it from GitHub — the Web Store listing is on its way.</p>
+    <div class="hero-ctas reveal d3">
+      <a class="btn btn-primary" href="https://github.com/Teeeeeeeerry/Safety-AI/releases/tag/v.1.1.0" target="_blank" rel="noopener">
+        View on GitHub
+        <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+      <span class="btn btn-ghost">
+        <span class="dot"></span>
+        Coming to the Chrome Web Store
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark">K</span>
+      <span class="brand-name">Safety AI<span class="sub">v1.1 · Manifest V3</span></span>
+    </a>
+    <div class="credits">
+      Built by Team Safekids at <a href="https://www.uts.edu.au" target="_blank" rel="noopener">UTS</a>
+      · <a href="https://github.com/Teeeeeeeerry/Safety-AI/releases/tag/v.1.1.0" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <div class="team-line">Anna-Maria · Harrison · Huong · Sofia · Terry · Tom</div>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav shadow/blur on scroll
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 24);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    }
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
