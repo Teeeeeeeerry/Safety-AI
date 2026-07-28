@@ -47,14 +47,5 @@
     "16": "src/assets/icons/icon-16.png",
     "48": "src/assets/icons/icon-48.png",
     "128": "src/assets/icons/icon-128.png"
-  },
-  "declarative_net_request": {
-    "rule_resources": [
-      {
-        "id": "ai_site_blocking",
-        "enabled": true,
-        "path": "public/rules/block-rules.json"
-      }
-    ]
   }
 }
