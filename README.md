@@ -37,7 +37,6 @@ This folder is a built, ready-to-load extension (Manifest V3). There is no build
 - `src/popup/popup.html` — toolbar popup.
 - `src/pages/` — options, onboarding, and blocked pages.
 - `src/assets/icons/` — extension icons.
-- `public/rules/block-rules.json` — static blocking rules.
 
 ## Privacy
 
@@ -88,7 +87,6 @@ Built by Team Safekids at the University of Technology Sydney (UTS): Anna-Maria,
 - `src/popup/popup.html` — 工具栏弹窗。
 - `src/pages/` — 设置、引导与屏蔽页面。
 - `src/assets/icons/` — 扩展图标。
-- `public/rules/block-rules.json` — 静态屏蔽规则。
 
 ## 隐私
 
@@ -97,3 +95,7 @@ Built by Team Safekids at the University of Technology Sydney (UTS): Anna-Maria,
 ## 团队
 
 由悉尼科技大学（UTS）Team Safekids 制作：Anna-Maria、Harrison、Huong、Sofia、Terry、Tom。
+
+---
+
+*最后编辑日期：2026-07-28*
