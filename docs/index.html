@@ -27,6 +27,7 @@
     --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
     --max: 1180px;
     --ease: cubic-bezier(.22,.61,.36,1);
+    --nav-h: 71px; /* 18px padding x2 + 34px brand mark + 1px border */
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -150,9 +151,20 @@
   }
 
   /* ---------- Hero ---------- */
-  .hero { padding: 60px 0 100px; position: relative; }
+  .hero {
+    padding: 60px 0 100px; position: relative;
+    /* Fill whatever is left below the sticky nav so the next (dark) section
+       never peeks into the first screen on short or wide windows. */
+    min-height: calc(100vh - var(--nav-h));
+    min-height: calc(100svh - var(--nav-h));
+    display: flex; align-items: center;
+  }
+  .hero > .wrap { width: 100%; }
   .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 60px; align-items: center; }
   @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; gap: 48px; } }
+  /* Short windows: give the height back to the content instead of the padding. */
+  @media (max-height: 780px) { .hero { padding: 32px 0 56px; } }
+  @media (max-height: 620px) { .hero { min-height: 0; padding: 28px 0 48px; } }
   .hero h1 span.accent { color: var(--brass); }
   .hero .lede { margin-top: 22px; }
   .hero-ctas { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 12px; }
@@ -163,9 +175,12 @@
   /* Subtle drifting shield behind hero */
   .hero-orb {
     position: absolute; top: 0; right: -6%;
-    width: 720px; height: 720px; pointer-events: none; z-index: 0;
+    width: min(720px, 88vw); height: min(720px, 88vw); pointer-events: none; z-index: 0;
     background: radial-gradient(closest-side, rgba(184,153,104,0.14), transparent 70%);
     animation: drift 18s var(--ease) infinite alternate;
+  }
+  @media (max-width: 900px) {
+    .hero-orb { right: 0; width: min(560px, 80vw); height: min(560px, 80vw); }
   }
   @keyframes drift {
     0% { transform: translate3d(0,0,0) scale(1); }
@@ -521,10 +536,9 @@
         </a>
       </div>
       <div class="hero-meta reveal d4">
-        <span class="item">Manifest V3</span>
         <span class="item">No accounts</span>
         <span class="item">No servers</span>
-        <span class="item">v1.1</span>
+        <span class="item">On-device</span>
       </div>
     </div>
 
@@ -563,7 +577,7 @@
           </div>
         </div>
         <div class="p-foot">
-          <span>Safety AI v1.1</span>
+          <span>Safety AI</span>
           <span class="p-lock" aria-hidden="true">&#9881;</span>
         </div>
       </div>
@@ -777,7 +791,7 @@
   <div class="wrap">
     <span class="eyebrow on-cream reveal">Get started</span>
     <h2 class="reveal d1">A quiet safety net for a room that's already loud.</h2>
-    <p class="lede reveal d2">Open source, Manifest V3, Chrome-compatible. Install it from the Chrome Web Store, or grab the source on GitHub.</p>
+    <p class="lede reveal d2">Open source and Chrome-compatible. Install it from the Chrome Web Store, or grab the source on GitHub.</p>
     <div class="hero-ctas reveal d3">
       <a class="btn btn-primary" href="https://github.com/Teeeeeeeerry/Safety-AI/releases/tag/v.1.1.0" target="_blank" rel="noopener">
         View on GitHub
@@ -797,7 +811,7 @@
   <div class="wrap footer-inner">
     <a class="brand" href="#top">
       <span class="brand-mark">K</span>
-      <span class="brand-name">Safety AI<span class="sub">v1.1 · Manifest V3</span></span>
+      <span class="brand-name">Safety AI<span class="sub">Child protection layer</span></span>
     </a>
     <div class="credits">
       Built by Team Safekids at <a href="https://www.uts.edu.au" target="_blank" rel="noopener">UTS</a>
