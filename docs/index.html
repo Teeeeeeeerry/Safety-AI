@@ -98,7 +98,9 @@
     background: transparent; color: var(--green);
     border: 1px solid var(--green-15);
   }
-  .btn-ghost:hover { border-color: var(--brass); color: var(--green); }
+  .btn-ghost:hover { border-color: var(--brass); color: var(--green); transform: translateY(-1px); }
+  .btn-ghost .arrow { transition: transform .3s var(--ease); }
+  .btn-ghost:hover .arrow { transform: translateX(3px); }
   .btn-ghost .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brass); box-shadow: 0 0 0 0 var(--brass-40); animation: pulse 2.4s infinite; }
   @keyframes pulse {
     0% { box-shadow: 0 0 0 0 var(--brass-40); }
@@ -512,10 +514,11 @@
           View on GitHub
           <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </a>
-        <span class="btn btn-ghost">
+        <a class="btn btn-ghost" href="https://chromewebstore.google.com/detail/safety-ai/ablkdfmgbcbialkagkdcphbgjnoijdil" target="_blank" rel="noopener">
           <span class="dot"></span>
-          Coming to the Chrome Web Store
-        </span>
+          Get it on the Chrome Web Store
+          <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
       </div>
       <div class="hero-meta reveal d4">
         <span class="item">Manifest V3</span>
@@ -774,16 +777,17 @@
   <div class="wrap">
     <span class="eyebrow on-cream reveal">Get started</span>
     <h2 class="reveal d1">A quiet safety net for a room that's already loud.</h2>
-    <p class="lede reveal d2">Open source, Manifest V3, Chrome-compatible. Grab it from GitHub — the Web Store listing is on its way.</p>
+    <p class="lede reveal d2">Open source, Manifest V3, Chrome-compatible. Install it from the Chrome Web Store, or grab the source on GitHub.</p>
     <div class="hero-ctas reveal d3">
       <a class="btn btn-primary" href="https://github.com/Teeeeeeeerry/Safety-AI/releases/tag/v.1.1.0" target="_blank" rel="noopener">
         View on GitHub
         <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </a>
-      <span class="btn btn-ghost">
+      <a class="btn btn-ghost" href="https://chromewebstore.google.com/detail/safety-ai/ablkdfmgbcbialkagkdcphbgjnoijdil" target="_blank" rel="noopener">
         <span class="dot"></span>
-        Coming to the Chrome Web Store
-      </span>
+        Get it on the Chrome Web Store
+        <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
     </div>
   </div>
 </section>
