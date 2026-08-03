@@ -1,5 +1,7 @@
 # Safety AI（中文）
 
+[English](README.md) | [中文](README.cn.md) 
+
 一款注重隐私的家长监护 Chrome 扩展，帮助孩子在 AI 聊天网站（ChatGPT、Claude、Gemini 等）上保持安全。它会扫描页面中的有害内容、记录并限制每日使用时长，并允许家长屏蔽或放行指定的 AI 网站。所有数据仅保存在本地设备，不会上传到任何服务器。
 
 本文件夹是已构建、可直接加载的扩展（Manifest V3），无需再编译。
