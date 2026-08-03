@@ -46,7 +46,6 @@ No accounts, no analytics, no external servers. All settings and usage data stay
 
 ## Team
 
-Built by Team Safekids at the University of Technology Sydney (UTS): Anna-Maria, Harrison, Huong, Sofia, Terry, Tom.
----
+Built by Team Safekids at the University of Technology Sydney: Anna-Maria, Harrison, Huong, Sofia, Terry, Tom.
 
-*最后编辑日期：2026-07-28*
+*最后编辑日期：2026-08-04*
