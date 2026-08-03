@@ -1,6 +1,6 @@
 # Safety AI
 
-English](README.md) | [中文](README.cn.md) 
+[English](README.md) | [中文](README.cn.md) 
 
 A privacy-first parental-control Chrome extension that helps keep children safe on AI chat websites (ChatGPT, Claude, Gemini, and more). It scans page content for harmful material, tracks and limits daily screen time, and lets a parent block or allow specific AI sites. All data is stored locally on the device; nothing is sent to any server.
 
