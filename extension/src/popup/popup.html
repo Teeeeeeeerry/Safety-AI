@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Safety AI</title>
+  <script src="/i18n.js"></script>
   <script type="module" crossorigin src="/assets/popup.html-UZOvM6kG.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
   <link rel="stylesheet" crossorigin href="/assets/popup-CeHDVzjz.css">
@@ -16,7 +17,7 @@
       <div class="logo">K</div>
       <div style="flex:1;">
         <div class="hdr-name">Safety AI</div>
-        <div class="hdr-sub">Child protection layer</div>
+        <div class="hdr-sub" data-i18n="child_layer">Child protection layer</div>
       </div>
     </div>
   </div>
@@ -33,7 +34,7 @@
 
     <!-- Screen Time -->
     <div class="section">
-      <div class="lbl">Today's Screen Time</div>
+      <div class="lbl" data-i18n="today_time">Today's Screen Time</div>
       <div class="card">
         <div class="time-big" id="timeDisplay">0 min</div>
         <div class="bar-bg"><div class="bar-fill" id="timeBar" style="width:0%"></div></div>
@@ -43,18 +44,18 @@
 
     <!-- Safety Reminders -->
     <div class="section">
-      <div class="lbl">Safety Reminders</div>
-      <div class="rem"><div class="rem-text"><strong>Keep secrets safe.</strong> Never share your name, address, school, or passwords with AI.</div></div>
-      <div class="rem"><div class="rem-text"><strong>Check it twice.</strong> AI can be wrong — always verify important answers.</div></div>
-      <div class="rem"><div class="rem-text"><strong>Ask a trusted adult</strong> if something feels confusing or upsetting.</div></div>
+      <div class="lbl" data-i18n="safety_rems">Safety Reminders</div>
+      <div class="rem"><div class="rem-text" data-i18n="rem_secrets" data-i18n-html><strong>Keep secrets safe.</strong> Never share your name, address, school, or passwords with AI.</div></div>
+      <div class="rem"><div class="rem-text" data-i18n="rem_check" data-i18n-html><strong>Check it twice.</strong> AI can be wrong — always verify important answers.</div></div>
+      <div class="rem"><div class="rem-text" data-i18n="rem_adult" data-i18n-html><strong>Ask a trusted adult</strong> if something feels confusing or upsetting.</div></div>
     </div>
 
   </div>
 
   <!-- Footer with parent settings -->
   <div class="footer">
-    <span>Safety AI v1.1</span>
-    <button class="lock-btn" id="parentLockBtn" title="Parent settings">&#9881;</button>
+    <span>Safety AI v1.2</span>
+    <button class="lock-btn" id="parentLockBtn" data-i18n-title="parent_lock" title="Parent settings">&#9881;</button>
   </div>
 </div>
 
@@ -62,13 +63,13 @@
 <div class="ovl" id="pwdOverlay">
   <div class="ovl-card">
     <div class="ovl-icon">&#128274;</div>
-    <div class="ovl-title">Parent Access</div>
-    <div class="ovl-msg">Enter the parent password to access settings.</div>
-    <input type="password" class="ovl-inp" id="pwdInput" placeholder="Password">
-    <div class="ovl-err" id="pwdError">Wrong password. Try again.</div>
+    <div class="ovl-title" data-i18n="parent_access">Parent Access</div>
+    <div class="ovl-msg" data-i18n="enter_pwd_msg">Enter the parent password to access settings.</div>
+    <input type="password" class="ovl-inp" id="pwdInput" data-i18n-ph="password" placeholder="Password">
+    <div class="ovl-err" id="pwdError" data-i18n="wrong_pwd">Wrong password. Try again.</div>
     <div class="ovl-acts">
-      <button class="btn-sec" id="pwdCancel">Cancel</button>
-      <button class="btn-pri" id="pwdSubmit">Unlock</button>
+      <button class="btn-sec" id="pwdCancel" data-i18n="cancel">Cancel</button>
+      <button class="btn-pri" id="pwdSubmit" data-i18n="unlock">Unlock</button>
     </div>
   </div>
 </div>
