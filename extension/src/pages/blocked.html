@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Site Blocked — Safety AI</title>
+<title data-i18n="blocked_title">Site Blocked — Safety AI</title>
+<script src="/i18n.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -57,9 +58,9 @@
 <body>
 <div class="container">
   <div class="icon">&#128683;</div>
-  <div class="label">Access Restricted</div>
-  <h1>Sorry, you can't access this website.</h1>
-  <p>This AI tool isn't approved for use. Ask a trusted adult if you think you should have access.</p>
+  <div class="label" data-i18n="access_restricted">Access Restricted</div>
+  <h1 data-i18n="cant_access">Sorry, you can't access this website.</h1>
+  <p data-i18n="not_approved">This AI tool isn't approved for use. Ask a trusted adult if you think you should have access.</p>
   <div class="divider"></div>
   <div class="domain" id="blockedDomain"></div>
 </div>

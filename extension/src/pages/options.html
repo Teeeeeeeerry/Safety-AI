@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Safety AI — Parent Settings</title>
+  <script src="/i18n.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: #F5F0E6; font-family: system-ui, -apple-system, sans-serif; color: #1F3A2E; }
@@ -123,11 +124,11 @@
 <div class="auth-gate" id="authGate">
   <div class="auth-card">
     <div class="auth-icon">&#128274;</div>
-    <div class="auth-title">Parent Settings</div>
-    <div class="auth-msg">Enter your parent password to access safety settings.</div>
-    <input type="password" class="auth-input" id="authInput" placeholder="Password">
-    <div class="auth-error" id="authError">Wrong password. Try again.</div>
-    <button class="auth-btn" id="authBtn">Unlock</button>
+    <div class="auth-title" data-i18n="parent_settings">Parent Settings</div>
+    <div class="auth-msg" data-i18n="auth_msg">Enter your parent password to access safety settings.</div>
+    <input type="password" class="auth-input" id="authInput" data-i18n-ph="password" placeholder="Password">
+    <div class="auth-error" id="authError" data-i18n="wrong_pwd">Wrong password. Try again.</div>
+    <button class="auth-btn" id="authBtn" data-i18n="unlock">Unlock</button>
   </div>
 </div>
 
@@ -136,19 +137,19 @@
   <div class="page-hdr">
     <div class="page-logo">K</div>
     <div>
-      <div class="page-title">Parent Settings</div>
-      <div class="page-sub">Safety AI management</div>
+      <div class="page-title" data-i18n="parent_settings">Parent Settings</div>
+      <div class="page-sub" data-i18n="management">Safety AI management</div>
     </div>
   </div>
 
   <!-- Safe Mode -->
   <div class="section">
-    <div class="section-title">Safe Mode</div>
+    <div class="section-title" data-i18n="safe_mode">Safe Mode</div>
     <div class="card">
       <div class="row">
         <div>
-          <div style="font-size:15px;font-weight:500;">Safe Mode</div>
-          <div style="font-size:12px;color:rgba(31,58,46,0.5);margin-top:3px;">Protects your child while using AI sites</div>
+          <div style="font-size:15px;font-weight:500;" data-i18n="safe_mode">Safe Mode</div>
+          <div style="font-size:12px;color:rgba(31,58,46,0.5);margin-top:3px;" data-i18n="safe_mode_desc">Protects your child while using AI sites</div>
         </div>
         <label class="tgl">
           <input type="checkbox" id="safeModeToggle">
@@ -159,31 +160,48 @@
     </div>
   </div>
 
+  <!-- Language -->
+  <div class="section">
+    <div class="section-title" data-i18n="language">Language</div>
+    <div class="card">
+      <div class="row">
+        <div>
+          <div style="font-size:15px;font-weight:500;" data-i18n="language">Language</div>
+          <div style="font-size:12px;color:rgba(31,58,46,0.5);margin-top:3px;" data-i18n="language_desc">Choose your preferred language</div>
+        </div>
+        <select id="langSelect" style="font-family:'JetBrains Mono',monospace;font-size:12px;padding:8px 10px;border:1px solid rgba(31,58,46,0.2);background:rgba(31,58,46,0.04);border-radius:8px;color:#1F3A2E;outline:none;cursor:pointer;">
+          <option value="en">English</option>
+          <option value="zh">中文</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
   <!-- Screen Time & Limit -->
   <div class="section">
-    <div class="section-title">Screen Time</div>
+    <div class="section-title" data-i18n="screen_time">Screen Time</div>
     <div class="card">
       <div class="row">
         <div>
           <div class="time-big" id="timeDisplay">0 min</div>
-          <div class="time-sub">on AI sites today</div>
+          <div class="time-sub" data-i18n="on_ai_sites">on AI sites today</div>
         </div>
-        <button class="btn btn-outline" id="resetTimeBtn">Reset</button>
+        <button class="btn btn-outline" id="resetTimeBtn" data-i18n="reset">Reset</button>
       </div>
       <div class="bar-bg"><div class="bar-fill" id="timeBar" style="width:0%"></div></div>
       <div class="limit-row">
-        <span class="limit-label">Daily limit:</span>
+        <span class="limit-label" data-i18n="daily_limit">Daily limit:</span>
         <input type="number" class="limit-input" id="limitInput" min="5" max="480" placeholder="--">
-        <span class="limit-label">min</span>
-        <button class="btn btn-dark" id="saveLimitBtn">Save</button>
-        <button class="btn btn-outline" id="clearLimitBtn">Clear</button>
+        <span class="limit-label" data-i18n="min">min</span>
+        <button class="btn btn-dark" id="saveLimitBtn" data-i18n="save">Save</button>
+        <button class="btn btn-outline" id="clearLimitBtn" data-i18n="clear">Clear</button>
       </div>
     </div>
   </div>
 
   <!-- Usage Chart -->
   <div class="section">
-    <div class="section-title">Usage History</div>
+    <div class="section-title" data-i18n="usage_history">Usage History</div>
     <div class="card">
       <div class="chart-tabs">
         <button class="chart-tab active" data-range="1d">1D</button>
@@ -198,68 +216,82 @@
 
   <!-- Usage Report -->
   <div class="section">
-    <div class="section-title">Today's Report</div>
+    <div class="section-title" data-i18n="todays_report">Today's Report</div>
     <div class="card">
       <div class="report-summary">
         <div class="report-stat">
           <div class="report-stat-value" id="reportTime">0</div>
-          <div class="report-stat-label">Minutes used</div>
+          <div class="report-stat-label" data-i18n="minutes_used">Minutes used</div>
         </div>
         <div class="report-stat">
           <div class="report-stat-value" id="reportKeywords">0</div>
-          <div class="report-stat-label">Keywords blocked</div>
+          <div class="report-stat-label" data-i18n="keywords_blocked">Keywords blocked</div>
         </div>
       </div>
-      <button class="btn btn-outline" id="exportReportBtn" style="width:100%;">Export report as HTML</button>
+      <button class="btn btn-outline" id="exportReportBtn" style="width:100%;" data-i18n="export_report">Export report as HTML</button>
     </div>
   </div>
 
   <!-- AI Sites -->
   <div class="section">
-    <div class="section-title">AI Site Access</div>
+    <div class="section-title" data-i18n="ai_site_access">AI Site Access</div>
     <div class="card">
-      <div class="desc">Allowed sites have keyword filtering active. Blocked sites redirect to a safety page.</div>
+      <div class="desc" data-i18n="sites_desc">Allowed sites have keyword filtering active. Blocked sites redirect to a safety page.</div>
       <div id="siteList"></div>
       <div class="site-add-row">
-        <input class="site-add-inp" id="siteAddInput" placeholder="Add a domain (e.g. example.com)" type="text">
-        <button class="btn btn-dark" id="siteAddBtn">Add</button>
+        <input class="site-add-inp" id="siteAddInput" data-i18n-ph="add_domain_ph" placeholder="Add a domain (e.g. example.com)" type="text">
+        <button class="btn btn-dark" id="siteAddBtn" data-i18n="add">Add</button>
       </div>
     </div>
   </div>
 
   <!-- Keywords -->
   <div class="section">
-    <div class="section-title">Blocked Keywords</div>
+    <div class="section-title" data-i18n="blocked_keywords">Blocked Keywords</div>
     <div class="card">
-      <div class="desc">When an AI response contains any keyword below, the page will be blocked until a parent unlocks it.</div>
+      <div class="desc" data-i18n="kw_desc">When an AI response contains any keyword below, the page will be blocked until a parent unlocks it.</div>
       <div id="kwList"></div>
       <div class="kw-row">
-        <input class="kw-inp" id="kwInput" placeholder="Type a keyword..." type="text">
-        <button class="btn btn-dark" id="kwAddBtn">Add</button>
+        <input class="kw-inp" id="kwInput" data-i18n-ph="type_kw_ph" placeholder="Type a keyword..." type="text">
+        <button class="btn btn-dark" id="kwAddBtn" data-i18n="add">Add</button>
       </div>
     </div>
   </div>
 
   <!-- Change Password -->
   <div class="section">
-    <div class="section-title">Change Password</div>
+    <div class="section-title" data-i18n="change_password">Change Password</div>
     <div class="card">
       <div class="pwd-fields">
-        <input type="password" class="pwd-input" id="currentPwd" placeholder="Current password">
-        <input type="password" class="pwd-input" id="newPwd1" placeholder="New password">
-        <input type="password" class="pwd-input" id="newPwd2" placeholder="Confirm new password">
+        <input type="password" class="pwd-input" id="currentPwd" data-i18n-ph="current_pwd_ph" placeholder="Current password">
+        <input type="password" class="pwd-input" id="newPwd1" data-i18n-ph="new_pwd_ph" placeholder="New password">
+        <input type="password" class="pwd-input" id="newPwd2" data-i18n-ph="confirm_new_pwd_ph" placeholder="Confirm new password">
         <div class="pwd-error" id="pwdChangeError"></div>
-        <div class="pwd-success" id="pwdChangeSuccess">Password changed successfully.</div>
-        <button class="btn btn-dark" id="changePwdBtn">Change password</button>
+        <div class="pwd-success" id="pwdChangeSuccess" data-i18n="pwd_changed">Password changed successfully.</div>
+        <button class="btn btn-dark" id="changePwdBtn" data-i18n="change_pwd_btn">Change password</button>
       </div>
     </div>
   </div>
 
   <div class="page-footer">
-    <p>Safety AI grew from a classroom hackathon project into a<br>production extension — built by students, refined for families.</p>
+    <p data-i18n="footer_text" data-i18n-html>Safety AI grew from a classroom hackathon project into a<br>production extension — built by students, refined for families.</p>
   </div>
 
 </div>
+
+<script>
+  // Language selector
+  document.addEventListener("DOMContentLoaded", function () {
+    var sel = document.getElementById("langSelect");
+    if (!sel || !window.__i18n) return;
+    sel.value = window.__i18n.getLang();
+    sel.addEventListener("change", function () {
+      window.__i18n.setLang(sel.value);
+      // refresh dynamic text rendered by the bundle
+      location.reload();
+    });
+  });
+</script>
 
 </body>
 </html>

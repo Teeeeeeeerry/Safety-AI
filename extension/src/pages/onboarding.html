@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Welcome — Safety AI</title>
+<title data-i18n="welcome_title">Welcome — Safety AI</title>
+  <script src="/i18n.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -203,19 +204,19 @@
       <div class="progress-dot"></div>
       <div class="progress-dot"></div>
     </div>
-    <div class="step-label">Step 1 of 4</div>
-    <div class="step-title">Create a parent password</div>
-    <div class="hint">This password protects your settings. You'll need it to disable Safe Mode, unlock blocked content, and change time limits.</div>
+    <div class="step-label" data-i18n="step_1">Step 1 of 4</div>
+    <div class="step-title" data-i18n="create_pwd">Create a parent password</div>
+    <div class="hint" data-i18n="step1_hint">This password protects your settings. You'll need it to disable Safe Mode, unlock blocked content, and change time limits.</div>
     <div class="field">
-      <div class="field-label">Password</div>
-      <input type="password" id="pwd1" placeholder="Choose a password">
+      <div class="field-label" data-i18n="password">Password</div>
+      <input type="password" id="pwd1" data-i18n-ph="choose_pwd_ph" placeholder="Choose a password">
     </div>
     <div class="field">
-      <div class="field-label">Confirm password</div>
-      <input type="password" id="pwd2" placeholder="Confirm your password">
+      <div class="field-label" data-i18n="confirm_pwd">Confirm password</div>
+      <input type="password" id="pwd2" data-i18n-ph="confirm_pwd_ph" placeholder="Confirm your password">
     </div>
     <div class="error" id="step1Error"></div>
-    <button class="btn-primary" id="step1Next">Continue</button>
+    <button class="btn-primary" id="step1Next" data-i18n="continue">Continue</button>
   </div>
 
   <!-- Step 2: Child info -->
@@ -226,22 +227,22 @@
       <div class="progress-dot"></div>
       <div class="progress-dot"></div>
     </div>
-    <div class="step-label">Step 2 of 4</div>
-    <div class="step-title">Tell us about your child</div>
+    <div class="step-label" data-i18n="step_2">Step 2 of 4</div>
+    <div class="step-title" data-i18n="child_info">Tell us about your child</div>
     <div class="field">
-      <div class="field-label">How old is your child?</div>
-      <input type="number" id="childAge" min="4" max="17" placeholder="Age">
+      <div class="field-label" data-i18n="child_age">How old is your child?</div>
+      <input type="number" id="childAge" min="4" max="17" data-i18n-ph="age_ph" placeholder="Age">
     </div>
-    <div class="field-label" style="margin:14px 0 4px;">What will they use AI for?</div>
+    <div class="field-label" style="margin:14px 0 4px;" data-i18n="ai_use">What will they use AI for?</div>
     <div class="checkbox-group" id="useCases">
-      <label><input type="checkbox" value="research"> Recreational research</label>
-      <label><input type="checkbox" value="creativity"> Enhance creativity</label>
-      <label><input type="checkbox" value="homework"> Assistance with assignments</label>
-      <label><input type="checkbox" value="coding"> Learning how to code</label>
-      <label><input type="checkbox" value="literature"> Searching for literature</label>
+      <label><input type="checkbox" value="research"><span data-i18n="use_research">Recreational research</span></label>
+      <label><input type="checkbox" value="creativity"><span data-i18n="use_creativity">Enhance creativity</span></label>
+      <label><input type="checkbox" value="homework"><span data-i18n="use_homework">Assistance with assignments</span></label>
+      <label><input type="checkbox" value="coding"><span data-i18n="use_coding">Learning how to code</span></label>
+      <label><input type="checkbox" value="literature"><span data-i18n="use_literature">Searching for literature</span></label>
     </div>
     <div class="error" id="step2Error"></div>
-    <button class="btn-primary" id="step2Next">Continue</button>
+    <button class="btn-primary" id="step2Next" data-i18n="continue">Continue</button>
   </div>
 
   <!-- Step 3: Review sites & keywords -->
@@ -252,26 +253,26 @@
       <div class="progress-dot active"></div>
       <div class="progress-dot"></div>
     </div>
-    <div class="step-label">Step 3 of 4</div>
-    <div class="step-title">Review safety settings</div>
-    <div class="hint">We've suggested settings based on your child's age. You can change these anytime in the extension popup.</div>
+    <div class="step-label" data-i18n="step_3">Step 3 of 4</div>
+    <div class="step-title" data-i18n="review_settings">Review safety settings</div>
+    <div class="hint" data-i18n="step3_hint">We've suggested settings based on your child's age. You can change these anytime in the extension popup.</div>
 
-    <div class="field-label">AI Sites</div>
+    <div class="field-label" data-i18n="ai_sites">AI Sites</div>
     <div class="site-list" id="siteList"></div>
 
-    <div class="field-label">Blocked Keywords</div>
+    <div class="field-label" data-i18n="blocked_keywords">Blocked Keywords</div>
     <div class="kw-tags" id="kwTags"></div>
     <div style="display:flex;gap:6px;margin-bottom:14px;">
-      <input type="text" id="kwInput" placeholder="Add a keyword..." style="flex:1;">
-      <button class="toggle-btn" id="kwAddBtn" style="padding:8px 14px;">Add</button>
+      <input type="text" id="kwInput" data-i18n-ph="add_kw_ph" placeholder="Add a keyword..." style="flex:1;">
+      <button class="toggle-btn" id="kwAddBtn" style="padding:8px 14px;" data-i18n="add">Add</button>
     </div>
 
-    <div class="field-label">Daily Time Limit</div>
+    <div class="field-label" data-i18n="daily_time_limit">Daily Time Limit</div>
     <div class="field">
-      <input type="number" id="timeLimitInput" min="5" max="480" placeholder="Minutes (e.g. 30)">
+      <input type="number" id="timeLimitInput" min="5" max="480" data-i18n-ph="minutes_ph" placeholder="Minutes (e.g. 30)">
     </div>
 
-    <button class="btn-primary" id="step3Next">Continue</button>
+    <button class="btn-primary" id="step3Next" data-i18n="continue">Continue</button>
   </div>
 
   <!-- Step 4: Done -->
@@ -282,11 +283,11 @@
       <div class="progress-dot done"></div>
       <div class="progress-dot active"></div>
     </div>
-    <div class="step-label">Setup complete</div>
-    <div class="step-title">You're all set!</div>
-    <div class="hint">Safe Mode is now active. Your child can browse approved AI sites with keyword filtering and screen time tracking enabled.<br><br>You can change any setting by clicking the Safety AI icon in your browser toolbar.</div>
+    <div class="step-label" data-i18n="setup_done">Setup complete</div>
+    <div class="step-title" data-i18n="all_set">You're all set!</div>
+    <div class="hint" data-i18n="step4_hint" data-i18n-html>Safe Mode is now active. Your child can browse approved AI sites with keyword filtering and screen time tracking enabled.<br><br>You can change any setting by clicking the Safety AI icon in your browser toolbar.</div>
     <div style="text-align:center;font-size:56px;margin:20px 0;">&#9989;</div>
-    <button class="btn-primary" id="finishBtn">Close setup</button>
+    <button class="btn-primary" id="finishBtn" data-i18n="close_setup">Close setup</button>
   </div>
 </div>
 
