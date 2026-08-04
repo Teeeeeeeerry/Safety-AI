@@ -177,11 +177,18 @@
     for (var k = 0; k < titles.length; k++) titles[k].title = t(titles[k].dataset.i18nTitle);
   }
 
-  function setLang(next) {
+  function setLang(next, done) {
     lang = next === "zh" ? "zh" : "en";
     try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
-    try { chrome.storage.local.set({ uiLanguage: lang }); } catch (e) {}
+    if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
+      try {
+        chrome.storage.local.set({ uiLanguage: lang }, function () { if (done) done(); });
+        apply();
+        return lang;
+      } catch (e) {}
+    }
     apply();
+    if (done) done();
     return lang;
   }
 
@@ -190,12 +197,25 @@
   window.__i18n = { t: t, apply: apply, setLang: setLang, getLang: getLang };
 
   /* Sync from chrome.storage (e.g. when changed in another page) and apply.
-     Synchronous localStorage covers the load-time path, this catches the
-     cross-tab case. */
+     localStorage is the synchronous source of truth: it is written before any
+     reload and always reflects the latest choice. chrome.storage is only a
+     cross-page sync channel, so it must never override localStorage — a stale
+     storage value (e.g. when an async write was interrupted by a reload) would
+     otherwise overwrite the newer language and get persisted back to
+     localStorage. When localStorage has a value we trust it and repair
+     storage; storage is only consulted when localStorage is empty (e.g. the
+     first page that sets the language). */
   if (typeof chrome !== "undefined" && chrome.storage) {
     chrome.storage.local.get([LANG_KEY], function (res) {
       var stored = res && res[LANG_KEY];
-      if (stored === "zh" || stored === "en") {
+      var local = null;
+      try { local = localStorage.getItem(LANG_KEY); } catch (e) {}
+      if (local === "zh" || local === "en") {
+        lang = local;
+        if (stored !== local) {
+          try { chrome.storage.local.set({ uiLanguage: local }); } catch (e) {}
+        }
+      } else if (stored === "zh" || stored === "en") {
         lang = stored;
         try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
       }
