@@ -20,6 +20,7 @@ This folder is a built, ready-to-load extension (Manifest V3). There is no build
 - Allow / block list for AI sites, plus custom sites.
 - Parent password (PBKDF2-hashed) with a 60-second inactivity auto-lock.
 - Draggable on-screen timer widget with safety reminders.
+- Multi-language: English / 中文, switchable from the settings page and synced across all extension pages.
 
 ## Permissions
 
@@ -34,6 +35,7 @@ This folder is a built, ready-to-load extension (Manifest V3). There is no build
 
 - `manifest.json` — extension manifest (MV3).
 - `service-worker-loader.js` — background service worker entry.
+- `i18n.js` — runtime translation layer (English / 中文), loaded by every extension page.
 - `content-script.js` — injected on allowed AI sites.
 - `assets/` — bundled scripts and styles.
 - `src/popup/popup.html` — toolbar popup.
