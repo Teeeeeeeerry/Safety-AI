@@ -163,6 +163,8 @@
   }
 
   function apply(root) {
+    /* Keep <html lang> in sync so screen readers pick up the current language. */
+    try { document.documentElement.lang = lang; } catch (e) {}
     var scope = root && root.querySelectorAll ? root : document;
     var list = (root && root.querySelectorAll ? root : document).querySelectorAll("[data-i18n]");
     for (var i = 0; i < list.length; i++) {
@@ -182,7 +184,17 @@
     try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
     if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
       try {
-        chrome.storage.local.set({ uiLanguage: lang }, function () { if (done) done(); });
+        var fired = false;
+        function finish() {
+          if (fired) return;
+          fired = true;
+          if (done) done();
+        }
+        chrome.storage.local.set({ uiLanguage: lang }, finish);
+        /* Fallback: if the storage callback is never invoked (e.g. extension
+           context invalidated), force the reload after 2 s so the bundle can
+           re-render dynamic text in the new language. */
+        if (done) setTimeout(finish, 2000);
         apply();
         return lang;
       } catch (e) {}
@@ -225,6 +237,21 @@
         apply();
       }
     });
+
+    /* Live cross-tab sync: when another extension page changes the language,
+       update the DOM immediately without a reload. The content script widget
+       rebuilds itself via its own onChanged listener. */
+    if (chrome.storage.onChanged) {
+      chrome.storage.onChanged.addListener(function (changes, areaName) {
+        if (areaName !== "local" || !changes[LANG_KEY]) return;
+        var newVal = changes[LANG_KEY].newValue;
+        if (newVal !== lang && (newVal === "zh" || newVal === "en")) {
+          lang = newVal;
+          try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
+          apply();
+        }
+      });
+    }
   } else {
     document.addEventListener("DOMContentLoaded", function () { apply(); });
   }
