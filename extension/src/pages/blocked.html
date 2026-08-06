@@ -64,14 +64,6 @@
   <div class="divider"></div>
   <div class="domain" id="blockedDomain"></div>
 </div>
-<script>
-  const params = new URLSearchParams(location.search);
-  const url = params.get('url') || document.referrer;
-  if (url) {
-    try {
-      document.getElementById('blockedDomain').textContent = new URL(url).hostname;
-    } catch {}
-  }
-</script>
+<script src="/src/pages/blocked.js"></script>
 </body>
 </html>

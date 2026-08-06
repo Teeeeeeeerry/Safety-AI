@@ -279,33 +279,7 @@
 
 </div>
 
-<script>
-  // Language selector
-  document.addEventListener("DOMContentLoaded", function () {
-    var sel = document.getElementById("langSelect");
-    if (!sel || !window.__i18n) return;
-    sel.value = window.__i18n.getLang();
-    sel.addEventListener("change", function () {
-      // reload 放到 storage 写入完成回调里,避免 reload 打断异步写入,
-      // 导致 storage 中的旧值在下次加载时覆盖新语言
-      // setLang 内部已添加 2 s 超时兜底,确保 reload 最终一定会执行
-      window.__i18n.setLang(sel.value, function () {
-        // refresh dynamic text rendered by the bundle
-        location.reload();
-      });
-    });
-
-    // Keep selector in sync when language is changed from another tab
-    if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.onChanged) {
-      chrome.storage.onChanged.addListener(function (changes, areaName) {
-        if (areaName === "local" && changes.uiLanguage) {
-          var v = changes.uiLanguage.newValue;
-          if (v === "zh" || v === "en") sel.value = v;
-        }
-      });
-    }
-  });
-</script>
+<script src="/src/pages/options-lang.js"></script>
 
 </body>
 </html>
