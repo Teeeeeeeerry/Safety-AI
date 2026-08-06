@@ -47,6 +47,7 @@
     parent_lock:    { en: "Parent settings",        zh: "家长设置" },
 
     /* ---- options ---- */
+    options_title:  { en: "Safety AI — Parent Settings", zh: "Safety AI — 家长设置" },
     parent_settings: { en: "Parent Settings",       zh: "家长设置" },
     management:     { en: "Safety AI management",   zh: "Safety AI 管理" },
     auth_msg:       { en: "Enter your parent password to access safety settings.", zh: "输入家长密码以访问安全设置。" },
@@ -208,6 +209,46 @@
 
   window.__i18n = { t: t, apply: apply, setLang: setLang, getLang: getLang };
 
+  /* ---- synchronous apply (localStorage is the source of truth) ----
+     Runs immediately based on localStorage so that `<script defer>` /
+     `type="module"` bundles see translated text from their first paint,
+     without waiting for the async chrome.storage.local.get round-trip. */
+  function scheduleApply() {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", function () { apply(); });
+    } else {
+      apply();
+    }
+  }
+  scheduleApply();
+
+  /* ---- MutationObserver: auto-translate dynamically inserted nodes ----
+     When a bundle injects new DOM that contains [data-i18n] elements (e.g.
+     site lists, keyword tags, chart labels), the observer re-applies
+     translations so those nodes are never left in English. */
+  if (typeof MutationObserver !== "undefined") {
+    var _moDisconnected = false;
+    var _mo = new MutationObserver(function () {
+      if (_moDisconnected) return;
+      _mo.disconnect();
+      _moDisconnected = true;
+      apply();
+      _moDisconnected = false;
+      if (document.documentElement) {
+        _mo.observe(document.documentElement, { childList: true, subtree: true });
+      }
+    });
+    if (document.documentElement) {
+      _mo.observe(document.documentElement, { childList: true, subtree: true });
+    } else {
+      document.addEventListener("DOMContentLoaded", function () {
+        if (document.documentElement) {
+          _mo.observe(document.documentElement, { childList: true, subtree: true });
+        }
+      });
+    }
+  }
+
   /* Sync from chrome.storage (e.g. when changed in another page) and apply.
      localStorage is the synchronous source of truth: it is written before any
      reload and always reflects the latest choice. chrome.storage is only a
@@ -231,9 +272,10 @@
         lang = stored;
         try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
       }
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", function () { apply(); });
-      } else {
+      /* apply() already ran synchronously via scheduleApply(); re-apply
+         here only if the reconciled lang differs from the initial guess
+         (first-run case where localStorage was empty). */
+      if (lang !== (local === "zh" || local === "en" ? local : "en")) {
         apply();
       }
     });
@@ -252,7 +294,5 @@
         }
       });
     }
-  } else {
-    document.addEventListener("DOMContentLoaded", function () { apply(); });
   }
 })();
